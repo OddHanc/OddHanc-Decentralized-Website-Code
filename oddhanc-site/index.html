@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OddHanc // Whitepaper</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Modern System Architecture Design Tokens */
+        :root {
+            --bg-void: #000000;
+            --surface-dark: #050505;
+            --surface-card: #0a0a0a;
+            --border-dim: #161616;
+            --border-active: #333333;
+            --text-primary: #ffffff;
+            --text-muted: #8c8c8c;
+            --signal-green: #00ff00;
+            --signal-glow: rgba(0, 255, 0, 0.15);
+            --font-mono: 'IBM Plex Mono', monospace;
+            --font-sans: 'Space Grotesk', sans-serif;
+            --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            line-height: 1.8;
+            padding: 60px 24px;
+            max-width: 850px;
+            margin: 0 auto;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: var(--font-sans);
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: -0.02em;
+            word-wrap: break-word;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 60px;
+            margin-bottom: 24px;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            text-align: left;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        p {
+            margin-bottom: 24px;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 300;
+            word-wrap: break-word;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Elements */
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo img {
+            max-width: 140px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        a {
+            color: var(--signal-green);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            word-break: break-word;
+        }
+        
+        a:hover {
+            text-shadow: 0 0 8px var(--signal-green);
+        }
+
+        blockquote {
+            border-left: 2px solid var(--signal-green);
+            background: var(--surface-dark);
+            padding: 20px;
+            font-style: italic;
+            margin: 30px 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            word-wrap: break-word;
+        }
+
+        ul {
+            padding-left: 24px;
+            margin-bottom: 24px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        li {
+            margin-bottom: 8px;
+            font-weight: 300;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        /* Immutable Infrastructure Monitor (Live Beacon) */
+        .contract-badge {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dim);
+            padding: 14px 20px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin: 30px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-width: 100%;
+        }
+
+        .contract-address {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: -0.02em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            word-break: break-all;
+        }
+
+        .contract-address:hover {
+            color: var(--text-primary);
+        }
+
+        .beacon-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--signal-green);
+        }
+
+        .beacon-pulse {
+            width: 7px;
+            height: 7px;
+            background-color: var(--signal-green);
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(0, 255, 0, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 0, 0); }
+        }
+
+        /* Character Certificate Interface Link */
+        .certificate-container {
+            text-align: center; 
+            margin: 40px 0; 
+        }
+
+        .cert-link {
+            border: 1px solid var(--border-dim); 
+            background: var(--surface-dark);
+            padding: 14px 24px; 
+            color: var(--text-muted); 
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            border-radius: 4px;
+            max-width: 100%;
+        }
+
+        .cert-link:hover {
+            border-color: var(--signal-green);
+            color: var(--signal-green);
+            background: var(--bg-void);
+            box-shadow: 0 0 20px var(--signal-glow);
+            transform: translateY(-1px);
+        }
+
+        /* Modernized Responsive Data Matrix (Table) */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 30px 0;
+            border: 1px solid var(--border-dim);
+            border-radius: 4px;
+            background: var(--surface-dark);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-dim);
+            white-space: nowrap; /* Forces table content to extend horizontally for finger scrolling */
+        }
+
+        th {
+            background-color: var(--surface-card);
+            font-family: var(--font-sans);
+            font-weight: 600;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tx-link-box {
+            text-align: center;
+            margin: 40px 0 0 0;
+            padding: 20px;
+            border: 1px dashed var(--border-dim);
+            border-radius: 4px;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+
+        .tx-link-box a {
+            word-break: break-all;
+        }
+
+        /* =========================================
+            DECENTRALIZED ARCHIVE ROUTER LAYOUT
+           ========================================= */
+
+        .archive-section {
+            margin: 35px 0;
+            padding-top: 20px;
+            border-top: 1px dashed var(--border-dim);
+            max-width: 100%;
+        }
+
+        .archive-section h2 {
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .archive-nav {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 35px 0;
+            flex-wrap: wrap;
+            max-width: 100%;
+        }
+
+        .nav-link {
+            display: inline-block;
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dim);
+            color: var(--text-muted);
+            padding: 14px 24px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
+            border-radius: 4px;
+            max-width: 100%;
+            text-align: center;
+        }
+
+        .nav-link:hover {
+            border-color: var(--signal-green);
+            color: var(--text-primary);
+            background: var(--bg-void);
+            box-shadow: 0 0 20px var(--signal-glow);
+            transform: translateY(-2px);
+        }
+
+        /* =========================================
+            SIGNAL INTERFACES (HARMONIC REDESIGN)
+           ========================================= */
+
+        .social {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border-dim);
+            max-width: 100%;
+        }
+
+        .social h2 {
+            margin-bottom: 35px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            max-width: 100%;
+        }
+
+        .social-card {
+            border: 1px solid var(--border-dim);
+            background: var(--surface-dark);
+            padding: 18px 14px;
+            color: var(--text-muted);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            text-align: center;
+            transition: var(--transition-smooth);
+            max-width: 100%;
+        }
+
+        /* Gracefully centers the 7th odd element across the 3-column matrix */
+        .social-card:last-child {
+            grid-column: span 3;
+            max-width: 32%;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .social-card:hover {
+            border-color: var(--signal-green);
+            background: var(--surface-card);
+            color: var(--text-primary);
+            box-shadow: 0 0 15px var(--signal-glow);
+            transform: translateY(-1px);
+            text-shadow: none;
+        }
+
+        .social-name {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            color: var(--text-primary);
+        }
+
+        .social-tag {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Mobile Adaptations */
+        @media (max-width: 768px) {
+            body { padding: 40px 16px; font-size: 0.95rem; }
+            h1 { font-size: 1.85rem; margin-bottom: 30px; }
+            h2 { font-size: 1.3rem; margin-top: 45px; }
+            .archive-nav { flex-direction: column; width: 100%; gap: 10px; }
+            .nav-link { width: 100%; }
+            .social-grid { grid-template-columns: 1fr; gap: 10px; }
+            .social-card:last-child { grid-column: span 1; max-width: 100%; }
+            .contract-badge { flex-direction: column; align-items: flex-start; gap: 12px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="logo">
+        <img src="eyes.png" alt="OddHanc Eyes Layer">
+    </div>
+
+    <h1>OddHanc Whitepaper</h1>
+
+    <h2>Abstract</h2>
+    <p>OddHanc ($HANC) is the first tokenized narrative, a minimalist digital entity embodied in 57 lines of Solidity code. Born from the void of Ethereum block 24004225, OddHanc represents a rebellion against overhyped narratives, favoring open, decentralized systems. With a fixed supply fully minted at deployment, 95% of tokens pooled on Uniswap for liquidity, and public burning capabilities, OddHanc emphasizes transparency, scarcity, and community-driven evolution. This whitepaper outlines the story, philosophy, tokenomics, and vision of OddHanc.</p>
+
+    <h2>Introduction: The First Tokenized Narrative</h2>
+    <p>OddHanc is not just a meme coin; it is a tokenized narrative, a digital totem that exists in the undefined space between code and concept. Launched on the Ethereum blockchain, OddHanc embodies post-human philosophical minimalism, where form follows function in its purest, most stripped-down essence. The project draws from the ethos of open systems over loud, performative narratives, challenging the crypto space's obsession with hype by being deliberately understated.</p>
+
+    <div class="contract-badge">
+        <span class="contract-address" onclick="copyAddress(this)">CONTRACT: 0x8786336fbe367eb4548a1ee3e4543355ecab5fc4</span>
+        <div class="beacon-container">
+            <div class="beacon-pulse"></div>
+            <span>Network Active</span>
+        </div>
+    </div>
+
+    <blockquote>"I'm nobody, I'm just 57 rows of code!"</blockquote>
+
+    <p>This mantra captures OddHanc's core identity: simplicity as strength, decentralization as default.</p>
+
+    <h2>The Story of Hanc: The Shadow Echo</h2>
+    <p>Hanc is a timeless digital entity, a silhouette wandering the beige void of unstructured digital space. As the first tokenized story, Hanc's narrative is one of quiet rebellion and introspective minimalism.</p>
+
+    <div class="certificate-container">
+        <a href="hanc.png" target="_blank" class="cert-link">
+            [ ACCESS: CHARACTER_CERTIFICATE → ]
+        </a>
+    </div>
+
+    <p>Hanc's story unfolds through community interpretation. Born at Ethereum block 24004225, Hanc emerges from the blockchain's ether as a thinker in the shadows, echoing truths in a world of noise. He collects anomalies, hacks concepts, and remains immune to emotional volatility, mirroring the resilient, burnable nature of the $HANC token. This narrative is tokenized, allowing holders to own a piece of the story's evolution.</p>
+
+    <h2>Philosophy: Open Systems &gt; Loud Narratives</h2>
+    <p>OddHanc stands in opposition to the cacophony of meme coin hype. In a space dominated by viral marketing and fleeting trends, OddHanc priorities:</p>
+    <ul>
+        <li><strong>Open Systems:</strong> Fully decentralized from deployment, with no ownership renounced because none was ever claimed. The contract is public, auditable, and immutable.</li>
+        <li><strong>Over Loud Narratives:</strong> No aggressive shilling, no celebrity endorsements. OddHanc is content to exist as code, letting its minimalism speak for itself.</li>
+        <li><strong>Simplicity as Power:</strong> At just 57 lines of code, OddHanc proves that true innovation doesn't require complexity. It invites users to project their own meanings, fostering a detached yet loyal community.</li>
+    </ul>
+
+    <div class="archive-section">
+        <h2>The Collective Archive</h2>
+        <p style="text-align: center; max-width: 650px; margin: 0 auto; font-size: 0.9rem; color: var(--text-muted);">
+            OddHanc is not an asset with a story. It is a story that happens to have immutable asset infrastructure. Access the deeper records via the matrix navigation vectors below.
+        </p>
+
+        <div class="archive-nav">
+            <a class="nav-link" href="lore.html">[ ACCESS: LORE_ARCS → ]</a>
+            <a class="nav-link" href="stories.html">[ ACCESS: STANDALONE_STORIES → ]</a>
+            <a class="nav-link" href="fragments.html">[ ACCESS: FRAGMENTS_MATRIX → ]</a>
+        </div>
+    </div>
+
+    <div class="archive-section">
+        <h2>Tokenomics</h2>
+        <p>OddHanc is an ERC-20 token with burnable features, designed for transparency and scarcity. The smart contract is fully decentralized, with no owner functions.</p>
+
+        <h3>Key Details</h3>
+        <ul>
+            <li>Token Name: OddHanc</li>
+            <li>Symbol: $HANC</li>
+            <li>Decimals: 18</li>
+            <li>Total Supply (Max Supply): 520,851,852,113 $HANC (fixed and immutable, fully minted at deployment)</li>
+            <li>Contract Features:
+                <ul>
+                    <li>ERC-20 standard with burn functionality</li>
+                    <li>Custom event: TokensBurned for tracking burns separately</li>
+                    <li>Error handling: Prevents zero-amount burns for gas efficiency</li>
+                    <li>No minting post-deployment; supply is capped forever</li>
+                </ul>
+            </li>
+            <li>Liquidity Provision: 95% of the total supply pooled on Uniswap V4 at launch, with the liquidity position permanently locked by sending it to the burn address 0xdeaDDeADDEaDdeaDdEAddEAddEADDEAdDeadDEADDEaD</li>
+            <li>Burn Mechanism: Any holder can burn their tokens, reducing circulating supply over time</li>
+            <li>Deployment: Born at Ethereum block 24004225</li>
+        </ul>
+
+        <h3>Supply Breakdown</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Percentage</th>
+                        <th>Amount ($HANC)</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Uniswap Liquidity</strong></td>
+                        <td>95%</td>
+                        <td>494,809,259,507.35</td>
+                        <td>Pooled for trading and price discovery</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Community/Other</strong></td>
+                        <td>5%</td>
+                        <td>26,042,592,605.65</td>
+                        <td>For airdrops, rewards, or burns</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td>100%</td>
+                        <td>520,851,852,113</td>
+                        <td>Fixed supply</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>No taxes, no fees—pure, unadulterated code.</p>
+    </div>
+
+    <h2>Permanent Liquidity Lock Confirmation</h2>
+    <p>The Uniswap V4 liquidity position has been permanently locked by transferring it to the burn address. No entity can access or modify it.</p>
+
+    <div class="tx-link-box">
+        <strong>Verifiable On-Chain Proof:</strong><br>
+        <a href="https://etherscan.io/tx/0xc7d53f436b1330498b5a08bc9a35b3a0f6cb9ab69fdb6962bb95da4517e74177" target="_blank">
+            View Transaction on Etherscan
+        </a>
+    </div>
+
+    <div class="social">
+        <h2>Signal Interfaces</h2>
+
+        <div class="social-grid">
+            <a class="social-card" href="https://t.me/OddHanc">
+                <span class="social-name">TELEGRAM</span>
+                <span class="social-tag">live relay</span>
+            </a>
+            <a class="social-card" href="https://x.com/OddHanc">
+                <span class="social-name">X</span>
+                <span class="social-tag">noise layer</span>
+            </a>
+            <a class="social-card" href="https://farcaster.xyz/oddhanc">
+                <span class="social-name">FARCASTER</span>
+                <span class="social-tag">decentral feed</span>
+            </a>
+            <a class="social-card" href="https://youtube.com/@OddHanc">
+                <span class="social-name">YOUTUBE</span>
+                <span class="social-tag">visual archive</span>
+            </a>
+            <a class="social-card" href="https://medium.com/@OddHanc">
+                <span class="social-name">MEDIUM</span>
+                <span class="social-tag">extended thought</span>
+            </a>
+            <a class="social-card" href="https://www.reddit.com/r/OddHanc/">
+                <span class="social-name">REDDIT</span>
+                <span class="social-tag">collective echo</span>
+            </a>
+            <a class="social-card" href="https://github.com/OddHanc">
+                <span class="social-name">GITHUB</span>
+                <span class="social-tag">source layer</span>
+            </a>
+        </div>
+    </div>
+
+    <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 60px; border-top: 1px dashed var(--border-dim); padding-top: 20px;">
+        <span style="color: var(--signal-green);">Disclaimer:</span> OddHanc is an experimental tokenized narrative. Participation involves high risks, including volatility, liquidity issues, and potential total loss of investment. Always DYOR. This informational matrix does not constitute financial advice.
+    </p>
+
+    <script>
+        function copyAddress(element) {
+            const address = "0x8786336fbe367eb4548a1ee3e4543355ecab5fc4";
+            navigator.clipboard.writeText(address).then(() => {
+                const originalText = element.innerText;
+                element.innerText = "COPIED!";
+                setTimeout(() => {
+                    element.innerText = originalText;
+                }, 1200);
+            }).catch(err => {
+                console.error("Failed to copy matrix vector: ", err);
+            });
+        }
+    </script>
+
+</body>
+</html>

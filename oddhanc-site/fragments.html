@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oddhanc Terminal // Fragments Matrix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'IBM Plex Mono', monospace;
+            line-height: 1.75;
+            margin: 0 auto;
+            padding: 60px 20px;
+            max-width: 850px;
+        }
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-bottom: 1px dashed #222;
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+        }
+        .return-root {
+            display: inline-block;
+            color: #00ff00;
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 40px;
+            border: 1px solid #222;
+            padding: 6px 12px;
+        }
+        .return-root:hover {
+            border-color: #00ff00;
+            background: #050505;
+        }
+        .fragment-box {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .fragment-quote {
+            border: 1px dotted #222;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #cccccc;
+            background: linear-gradient(135deg, #020202 0%, #050505 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        @media (max-width: 600px) {
+            .fragment-box {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="return-root">[ ← RETURN_TO_ROOT ]</a>
+
+    <h1>ODDHANC_TERMINAL // FRAGMENTS MATRIX</h1>
+
+    <div class="fragment-box">
+        <div class="fragment-quote">
+            <span>“The passage was always there.<br>Only visible to anomalies.<br><br>We Can Make Things Happen.”</span>
+        </div>
+        <div class="fragment-quote">
+            <span>“The future may belong to entities capable of remaining conscious inside infinite noise.”</span>
+        </div>
+        <div class="fragment-quote">
+            <span>“Most people seek attention.<br>Few seek clarity.”</span>
+        </div>
+        <div class="fragment-quote">
+            <span>“Most wait for permission. Some become the key.”</span>
+        </div>
+        <div class="fragment-quote">
+            <span>“Not every wall is a barrier.<br>Some are invitations.”</span>
+        </div>
+        <div class="fragment-quote">
+            <span>“They searched for intelligence in machines.<br><br>They forgot to look for it in themselves.”</span>
+        </div>
+        <div class="fragment-quote">
+            <span>“Few notice the opening.<br>Fewer walk through.”</span>
+        </div>
+        <div class="fragment-quote">
+            <span>“What we judge quickly usually reveals us, not the truth.”</span>
+        </div>
+    </div>
+
+</body>
+</html>
